@@ -1,8 +1,10 @@
 import sys
 import pandas as pd
+import os
+
 
 def main():
-    arg = sys.argv[1]
+    arg = os.path.dirname(__file__) + '/' + sys.argv[1]
 
     data = pd.read_csv(arg)
 
@@ -32,7 +34,8 @@ def main():
         if new_audio_language_data != []:
             new_language_data = new_language_data[:-4]
             new_language_data[-1] = new_language_data[-1].split('*')[0]
-            new_audio_language_data[-1] = new_audio_language_data[-1].split('*')[0]
+            new_audio_language_data[-1] = new_audio_language_data[-1].split('*')[
+                0]
 
         audio_languages_column_data.append(new_audio_language_data)
         languages_column_data.append(new_language_data)
@@ -41,3 +44,8 @@ def main():
     data[languages_column] = languages_column_data
 
     data.to_csv(arg, index=False)
+
+
+if __name__ == "__main__":
+    main()
+    print("Parsed languages")
