@@ -11,6 +11,9 @@ def main():
     data.drop(columns=['QueryID', 'QueryName', 'AchievementHighlightedCount', 'PCReqsHaveMin', 'PCReqsHaveRec', 'LinuxReqsHaveMin', 'LinuxReqsHaveRec', 'MacReqsHaveMin', 'MacReqsHaveRec', 'LegalNotice', 'SupportEmail', 'SupportURL',
               'PriceCurrency', 'AboutText', 'Background', 'ShortDescrip', 'DRMNotice', 'ExtUserAcctNotice', 'LegalNotice', 'ScreenshotCount', 'MovieCount', 'PackageCount', 'SteamSpyOwnersVariance', 'SteamSpyPlayersVariance', 'Reviews'], inplace=True)
 
+    data.rename(
+        columns={'DetailedDescrip': 'PromotionalDescription'}, inplace=True)
+
     data.to_csv(arg, index=False)
 
 
