@@ -8,10 +8,21 @@ from tqdm import tqdm
 def get_wiki_data(response_name):
     endpoint = 'http://en.wikipedia.org/w/api.php'
     try:
-        response = requests.get(endpoint, params={'format': 'json', 'action': 'query', 'prop': 'extracts',
+        response = requests.get(endpoint, params={'format': 'json', 'action': 'query', 'prop': 'extracts|categories',
                                 'exlimit': 'max', 'explaintext': '', 'exintro': '', 'titles': response_name.replace(' ', '_')})
         pages = response.json()['query']['pages']
-        return next(iter(pages.values()))['extract']
+        first_page = next(iter(pages.values()))
+
+        if 'categories' in first_page:
+            for category in first_page['categories']:
+                if 'disambiguation' in category['title']:
+                    raise Exception('Disambiguation page')
+
+        description = first_page['extract']
+        if description == '' or description == ' ':
+            raise Exception('No description found')
+
+        return description
     except:
         return 'None'
 
