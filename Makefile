@@ -4,9 +4,9 @@ PROCESSED_CSV_PATH = data/processed.csv
 PROCESSED_JSON_PATH = data/processed.json
 PROCESSED_CSV_OUTER_PATH := ../$(PROCESSED_CSV_PATH)
 
-.PHONY: all collect download get_wiki_data process drop_rows drop_columns group_categories group_features group_genres parse_languages clean
+.PHONY: all collect download get_wiki_data process drop_rows drop_columns group_categories group_features group_genres parse_languages convert_to_json copy_to_solr clean
 
-all: collect process
+all: collect process copy_to_solr
 
 collect: download get_wiki_data
 
@@ -40,7 +40,11 @@ parse_languages:
 convert_to_json:
 	$(PYTHON) processing/convertToJson.py $(PROCESSED_CSV_OUTER_PATH)
 
+copy_to_solr:
+	mkdir -p ./solr/data && cp $(PROCESSED_JSON_PATH) ./solr/data/
+
 clean:
 	rm -f $(ORIGINAL_CSV_PATH)
 	rm -f $(PROCESSED_CSV_PATH)
 	rm -f $(PROCESSED_JSON_PATH)
+	rm -f ./solr/data/*.json
