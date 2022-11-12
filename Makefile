@@ -7,14 +7,11 @@ ORIGINAL_CSV_OUTER_PATH = ../$(ORIGINAL_CSV_PATH)
 
 MAKEFLAGS += --always-make # Always run the target, even if the file exists; no need for .PHONY
 
-all: collect process copy_to_solr
+all: collect process
 
 collect: download get_wiki_data
 
 process: copy_processed drop_rows drop_columns group_categories group_features group_genres parse_languages convert_to_json
-
-copy_to_solr:
-	mkdir -p ./solr/data && cp $(PROCESSED_JSON_PATH) ./solr/data/
 
 # Collection
 download:
@@ -53,4 +50,3 @@ clean:
 	rm -f $(ORIGINAL_CSV_PATH)
 	rm -f $(PROCESSED_CSV_PATH)
 	rm -f $(PROCESSED_JSON_PATH)
-	rm -f ./solr/data/processed.json

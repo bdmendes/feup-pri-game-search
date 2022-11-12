@@ -9,17 +9,27 @@ months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 
 def parse_date(date):
+    def ok_date(d):
+        return len(d) == 10 and d[4] == "-" and d[7] == "-" \
+            and d[:4].isdigit() and d[5:7].isdigit() and d[8:].isdigit()
+
     date = date.split(" ")
     try:
         if len(date) == 3:
             year = date[2].zfill(4)
             month = str(months.index(date[0]) + 1).zfill(2)
             day = date[1].zfill(2)
-            return f"{year}-{month}-{day}"
+            date = f"{year}-{month}-{day}"
+            if not ok_date(date):
+                raise Exception("Invalid date")
+            return date
         else:
             year = date[1].zfill(4)
             month = str(months.index(date[0]) + 1).zfill(2)
-            return f"{year}-{month}-01"
+            date = f"{year}-{month}-01"
+            if not ok_date(date):
+                raise Exception("Invalid date")
+            return date
     except:
         return None
 
