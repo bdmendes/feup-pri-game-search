@@ -10,10 +10,18 @@ months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 
 def parse_date(date):
     date = date.split(" ")
-    year = date[2].zfill(4)
-    month = str(months.index(date[0]) + 1).zfill(2)
-    day = date[1].zfill(2)
-    return f"{year}-{month}-{day}"
+    try:
+        if len(date) == 3:
+            year = date[2].zfill(4)
+            month = str(months.index(date[0]) + 1).zfill(2)
+            day = date[1].zfill(2)
+            return f"{year}-{month}-{day}"
+        else:
+            year = date[1].zfill(4)
+            month = str(months.index(date[0]) + 1).zfill(2)
+            return f"{year}-{month}-01"
+    except:
+        return None
 
 
 def csv_to_json(csv_file_path, json_file_path):
@@ -27,11 +35,11 @@ def csv_to_json(csv_file_path, json_file_path):
                 try:
                     n_row[i] = ast.literal_eval(str(j))
                 except:
-                    try:
+                    if "Date" in i or "date" in i:
                         n_row[i] = parse_date(j)
-                    except:
+                    else:
                         n_row[i] = j.strip()
-                if n_row[i] == None:
+                if i not in n_row or n_row[i] == None:
                     n_row[i] = ""
 
             json_arr.append(n_row)
