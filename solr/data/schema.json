@@ -8,7 +8,9 @@
                     "class":"solr.StandardTokenizerFactory"
                 },
                 "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.KStemFilterFactory"},
                     {"class":"solr.LowerCaseFilterFactory"}
                 ]
             },
@@ -17,7 +19,9 @@
                     "class":"solr.StandardTokenizerFactory"
                 },
                 "filters":[
+                    {"class":"solr.ClassicFilterFactory"},
                     {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.KStemFilterFactory"},
                     {"class":"solr.LowerCaseFilterFactory"}
                 ]
             }
