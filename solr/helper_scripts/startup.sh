@@ -3,6 +3,8 @@
 # Start Solr in background mode so we can use the API to upload the schema
 solr start
 
+solr delete -c steam-games
+
 bin/solr create_core -c steam-games
 
 # Schema definition via API
