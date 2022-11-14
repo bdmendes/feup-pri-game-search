@@ -1,28 +1,86 @@
 {
-	"add-field-type": [
+    "add-field-type": [
         {
-            "name":"GameName",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
+            "name": "short_text",
+            "class": "solr.TextField",
+            "indexAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
                 },
-                "filters":[
-                    {"class":"solr.ClassicFilterFactory"},
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.KStemFilterFactory"},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                "filters": [
+                    {
+                        "class": "solr.ClassicFilterFactory"
+                    },
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": true
+                    },
+                    {
+                        "class": "solr.KStemFilterFactory"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
                 ]
             },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
+            "queryAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
                 },
-                "filters":[
-                    {"class":"solr.ClassicFilterFactory"},
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.KStemFilterFactory"},
-                    {"class":"solr.LowerCaseFilterFactory"}
+                "filters": [
+                    {
+                        "class": "solr.ClassicFilterFactory"
+                    },
+                    {
+                        "class": "solr.ASCIIFoldingFilterFactory",
+                        "preserveOriginal": true
+                    },
+                    {
+                        "class": "solr.KStemFilterFactory"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "general_text",
+            "class": "solr.TextField",
+            "indexAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.StopFilterFactory",
+                        "ignoreCase": true,
+                        "words": "stopwords.txt"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
+                ]
+            },
+            "queryAnalyzer": {
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.StopFilterFactory",
+                        "ignoreCase": true,
+                        "words": "stopwords.txt"
+                    },
+                    {
+                        "class": "solr.SynonymFilterFactory",
+                        "synonyms": "synonyms.txt",
+                        "ignoreCase": true,
+                        "expand": true
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
                 ]
             }
         }
@@ -30,7 +88,17 @@
     "add-field": [
         {
             "name": "ResponseName",
-            "type": "GameName",
+            "type": "short_text",
+            "indexed": true
+        },
+        {
+            "name": "PromotionalDescription",
+            "type": "general_text",
+            "indexed": true
+        },
+        {
+            "name": "wikiData",
+            "type": "general_text",
             "indexed": true
         }
     ]
