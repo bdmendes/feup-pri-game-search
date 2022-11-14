@@ -1,6 +1,6 @@
 FROM solr:8.10
 
-COPY data/processed.json /data/steam-games.json
+COPY data/processed.json /data/processed.json
 
 COPY data/schema.json /data/schema.json
 
