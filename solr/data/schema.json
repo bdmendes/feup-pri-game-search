@@ -16,11 +16,11 @@
                         "class": "solr.ClassicFilterFactory"
                     },
                     {
-                        "class": "solr.LowerCaseFilterFactory"
-                    },
-                    {
                         "class": "solr.PhoneticFilterFactory",
                         "encoder": "DoubleMetaphone"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
                     }
                 ]
             },
