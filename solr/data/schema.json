@@ -9,11 +9,12 @@
                     "mapping": "mapping-FoldToASCII.txt"
                 },
                 "tokenizer": {
-                    "class": "solr.NGramTokenizerFactory",
-                    "minGramSize": "3",
-                    "maxGramSize": "5"
+                    "class": "solr.ClassicTokenizerFactory"
                 },
                 "filters": [
+                    {
+                        "class": "solr.ClassicFilterFactory"
+                    },
                     {
                         "class": "solr.LowerCaseFilterFactory"
                     },
@@ -29,11 +30,12 @@
                     "mapping": "mapping-FoldToASCII.txt"
                 },
                 "tokenizer": {
-                    "class": "solr.NGramTokenizerFactory",
-                    "minGramSize": "3",
-                    "maxGramSize": "5"
+                    "class": "solr.ClassicTokenizerFactory"
                 },
                 "filters": [
+                    {
+                        "class": "solr.ClassicFilterFactory"
+                    },
                     {
                         "class": "solr.LowerCaseFilterFactory"
                     }
