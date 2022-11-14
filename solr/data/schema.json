@@ -16,6 +16,9 @@
                         "class": "solr.ClassicFilterFactory"
                     },
                     {
+                        "class": "solr.KStemFilterFactory"
+                    },
+                    {
                         "class": "solr.PhoneticFilterFactory",
                         "encoder": "DoubleMetaphone"
                     },
@@ -35,6 +38,9 @@
                 "filters": [
                     {
                         "class": "solr.ClassicFilterFactory"
+                    },
+                    {
+                        "class": "solr.KStemFilterFactory"
                     },
                     {
                         "class": "solr.LowerCaseFilterFactory"
