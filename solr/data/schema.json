@@ -13,6 +13,9 @@
                 },
                 "filters": [
                     {
+                        "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
                         "class": "solr.ClassicFilterFactory"
                     },
                     {
@@ -21,9 +24,6 @@
                     {
                         "class": "solr.PhoneticFilterFactory",
                         "encoder": "DoubleMetaphone"
-                    },
-                    {
-                        "class": "solr.LowerCaseFilterFactory"
                     }
                 ]
             },
@@ -37,13 +37,13 @@
                 },
                 "filters": [
                     {
+                        "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
                         "class": "solr.ClassicFilterFactory"
                     },
                     {
                         "class": "solr.KStemFilterFactory"
-                    },
-                    {
-                        "class": "solr.LowerCaseFilterFactory"
                     }
                 ]
             }
@@ -61,12 +61,18 @@
                 },
                 "filters": [
                     {
-                        "class": "solr.StopFilterFactory",
-                        "ignoreCase": true,
-                        "words": "stopwords.txt"
+                        "class": "solr.LowerCaseFilterFactory"
                     },
                     {
-                        "class": "solr.LowerCaseFilterFactory"
+                        "class": "solr.StopFilterFactory",
+                        "ignoreCase": true,
+                        "words": "lang/stopwords_en.txt"
+                    },
+                    {
+                        "class": "solr.SynonymFilterFactory",
+                        "synonyms": "synonyms_en.txt",
+                        "ignoreCase": true,
+                        "expand": true
                     },
                     {
                         "class": "solr.CommonGramsFilterFactory"
@@ -86,18 +92,12 @@
                 },
                 "filters": [
                     {
-                        "class": "solr.StopFilterFactory",
-                        "ignoreCase": true,
-                        "words": "stopwords.txt"
-                    },
-                    {
                         "class": "solr.LowerCaseFilterFactory"
                     },
                     {
-                        "class": "solr.SynonymFilterFactory",
-                        "synonyms": "synonyms.txt",
+                        "class": "solr.StopFilterFactory",
                         "ignoreCase": true,
-                        "expand": true
+                        "words": "lang/stopwords_en.txt"
                     },
                     {
                         "class": "solr.CommonGramsFilterFactory"

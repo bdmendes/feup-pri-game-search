@@ -14,7 +14,7 @@ echo "Starting Solr Docker container"
 docker run -d --name=solr_steam -p 8983:8983 solr:8.10
 
 # Wait for Solr to start
-sleep 2
+sleep 3
 
 # Delete the core to prevent indexing of the same data multiple times
 echo ""
@@ -24,9 +24,12 @@ docker exec solr_steam bin/solr delete -c games_tuned
 
 # Create the simple and tuned cores
 echo ""
-echo "Creating new core"
+echo "Creating new cores"
 docker exec solr_steam bin/solr create_core -c games_simple
 docker exec solr_steam bin/solr create_core -c games_tuned
+
+# Import synonyms file
+docker cp $DIR/data/synonyms_en.txt solr_steam:/var/solr/data/games_tuned/conf
 
 # Schema definition via API
 echo ""
