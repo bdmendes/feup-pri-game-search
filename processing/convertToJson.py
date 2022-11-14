@@ -23,10 +23,16 @@ def parse_date(date):
             if not ok_date(date):
                 raise Exception("Invalid date")
             return date
-        else:
+        elif len(date) == 2:
             year = date[1].zfill(4)
             month = str(months.index(date[0]) + 1).zfill(2)
             date = f"{year}-{month}-01"
+            if not ok_date(date):
+                raise Exception("Invalid date")
+            return date
+        else:
+            year = date[0].zfill(4)
+            date = f"{year}-01-01"
             if not ok_date(date):
                 raise Exception("Invalid date")
             return date
