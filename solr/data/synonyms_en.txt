@@ -422,7 +422,7 @@ fold, crease, plication, flexure, crimp, bend
 following, next
 food, nutrient
 foot, human foot, pes
-football, football game
+football, football game, soccer
 footing, basis, ground
 footstep, pace, step, stride
 force, forcefulness, strength
