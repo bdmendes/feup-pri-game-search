@@ -59,6 +59,15 @@
                     },
                     {
                         "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
+                        "class": "solr.SynonymFilterFactory",
+                        "synonyms": "synonyms.txt",
+                        "ignoreCase": true,
+                        "expand": true
+                    },
+                    {
+                        "class": "solr.PorterStemFilterFactory"
                     }
                 ]
             },
@@ -71,12 +80,6 @@
                         "class": "solr.StopFilterFactory",
                         "ignoreCase": true,
                         "words": "stopwords.txt"
-                    },
-                    {
-                        "class": "solr.SynonymFilterFactory",
-                        "synonyms": "synonyms.txt",
-                        "ignoreCase": true,
-                        "expand": true
                     },
                     {
                         "class": "solr.LowerCaseFilterFactory"

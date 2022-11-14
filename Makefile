@@ -7,7 +7,7 @@ ORIGINAL_CSV_OUTER_PATH = ../$(ORIGINAL_CSV_PATH)
 
 MAKEFLAGS += --always-make # Always run the target, even if the file exists; no need for .PHONY
 
-all: collect process
+all: collect process solr
 
 collect: download get_wiki_data
 
@@ -44,6 +44,10 @@ parse_languages:
 
 convert_to_json:
 	$(PYTHON) processing/convertToJson.py $(PROCESSED_CSV_OUTER_PATH)
+
+# Solr
+solr:
+	./solr/setup_and_run.sh
 
 # Cleaning
 clean:
