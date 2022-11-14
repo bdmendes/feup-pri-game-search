@@ -4,40 +4,36 @@
             "name": "short_text",
             "class": "solr.TextField",
             "indexAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
                 "tokenizer": {
-                    "class": "solr.StandardTokenizerFactory"
+                    "class": "solr.NGramTokenizerFactory",
+                    "minGramSize": "3",
+                    "maxGramSize": "5"
                 },
                 "filters": [
                     {
-                        "class": "solr.ClassicFilterFactory"
-                    },
-                    {
-                        "class": "solr.ASCIIFoldingFilterFactory",
-                        "preserveOriginal": true
-                    },
-                    {
-                        "class": "solr.KStemFilterFactory"
-                    },
-                    {
                         "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
+                        "class": "solr.PhoneticFilterFactory",
+                        "encoder": "DoubleMetaphone"
                     }
                 ]
             },
             "queryAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
                 "tokenizer": {
-                    "class": "solr.StandardTokenizerFactory"
+                    "class": "solr.NGramTokenizerFactory",
+                    "minGramSize": "3",
+                    "maxGramSize": "5"
                 },
                 "filters": [
-                    {
-                        "class": "solr.ClassicFilterFactory"
-                    },
-                    {
-                        "class": "solr.ASCIIFoldingFilterFactory",
-                        "preserveOriginal": true
-                    },
-                    {
-                        "class": "solr.KStemFilterFactory"
-                    },
                     {
                         "class": "solr.LowerCaseFilterFactory"
                     }
@@ -48,6 +44,10 @@
             "name": "general_text",
             "class": "solr.TextField",
             "indexAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
                 "tokenizer": {
                     "class": "solr.StandardTokenizerFactory"
                 },
@@ -61,11 +61,18 @@
                         "class": "solr.LowerCaseFilterFactory"
                     },
                     {
+                        "class": "solr.CommonGramsFilterFactory"
+                    },
+                    {
                         "class": "solr.PorterStemFilterFactory"
                     }
                 ]
             },
             "queryAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
                 "tokenizer": {
                     "class": "solr.StandardTokenizerFactory"
                 },
@@ -74,6 +81,9 @@
                         "class": "solr.StopFilterFactory",
                         "ignoreCase": true,
                         "words": "stopwords.txt"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
                     },
                     {
                         "class": "solr.SynonymFilterFactory",
@@ -82,7 +92,7 @@
                         "expand": true
                     },
                     {
-                        "class": "solr.LowerCaseFilterFactory"
+                        "class": "solr.CommonGramsFilterFactory"
                     },
                     {
                         "class": "solr.PorterStemFilterFactory"
@@ -103,7 +113,7 @@
             "indexed": true
         },
         {
-            "name": "wikiData",
+            "name": "WikiData",
             "type": "general_text",
             "indexed": true
         }
