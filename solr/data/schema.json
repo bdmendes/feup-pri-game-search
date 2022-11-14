@@ -64,9 +64,7 @@
                         "class": "solr.LowerCaseFilterFactory"
                     },
                     {
-                        "class": "solr.StopFilterFactory",
-                        "ignoreCase": true,
-                        "words": "lang/stopwords_en.txt"
+                        "class": "solr.CommonGramsFilterFactory"
                     },
                     {
                         "class": "solr.SynonymFilterFactory",
@@ -75,7 +73,12 @@
                         "expand": true
                     },
                     {
-                        "class": "solr.CommonGramsFilterFactory"
+                        "class": "solr.StopFilterFactory",
+                        "ignoreCase": true,
+                        "words": "lang/stopwords_en.txt"
+                    },
+                    {
+                        "class": "solr.RemoveDuplicatesTokenFilterFactory"
                     },
                     {
                         "class": "solr.PorterStemFilterFactory"
