@@ -43,12 +43,12 @@ def csv_to_json(csv_file_path, json_file_path):
             n_row = {}
             for i, j in row.items():
                 try:
-                    n_row[i] = ast.literal_eval(str(j))
-                except:
                     if "Date" in i or "date" in i:
                         n_row[i] = parse_date(j)
                     else:
-                        n_row[i] = j.strip()
+                        n_row[i] = ast.literal_eval(str(j))
+                except:
+                    n_row[i] = j.strip()
                 if i not in n_row or n_row[i] == None:
                     n_row[i] = ""
 
