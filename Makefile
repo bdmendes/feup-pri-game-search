@@ -11,7 +11,7 @@ all: collect process solr
 
 collect: download get_wiki_data
 
-process: copy_processed drop_rows drop_columns group_categories group_features group_genres parse_languages convert_to_json
+process: copy_processed drop_rows drop_columns group_categories group_features group_genres group_platforms parse_languages convert_to_json
 
 # Collection
 download:
@@ -38,6 +38,9 @@ group_features:
 
 group_genres:
 	$(PYTHON) processing/groupGenres.py $(PROCESSED_CSV_OUTER_PATH)
+
+group_platforms:
+	$(PYTHON) processing/groupPlatforms.py $(PROCESSED_CSV_OUTER_PATH)
 
 parse_languages:
 	$(PYTHON) processing/parseLanguages.py $(PROCESSED_CSV_OUTER_PATH)
