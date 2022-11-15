@@ -15,7 +15,7 @@ if not os.path.exists(CURRENT_PATH + "results/"):
     os.mkdir(CURRENT_PATH + "results/")
 
 QRELS_FILE = CURRENT_PATH + f"qrels/{QNAME}_qrels"
-Q_FILE = CURRENT_PATH + f"querries/{QNAME}_q"
+Q_FILE = CURRENT_PATH + f"queries/{QNAME}_q"
 TUNED_QUERY_URL = open(Q_FILE).readline()
 
 # Read qrels to extract relevant documents
