@@ -1,0 +1,1 @@
+http://localhost:8983/solr/{}/select?q=ResponseName%20:%20%22Vietnam%22~2%5E4%0APromotionalDescription:%20%22Vietnam%22~3%0AwikiData:%20%22Vietnam%22~3%5E3&q.op=OR&indent=true&wt=json
