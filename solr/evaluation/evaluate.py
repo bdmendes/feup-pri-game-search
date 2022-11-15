@@ -19,7 +19,7 @@ Q_FILE = CURRENT_PATH + f"querries/{QNAME}_q"
 TUNED_QUERY_URL = open(Q_FILE).readline()
 
 # Read qrels to extract relevant documents
-relevant = list(map(lambda el: el.strip(), open(QRELS_FILE).readlines()))
+relevant = list(map(lambda el: int(el.strip()), open(QRELS_FILE).readlines()))
 # Get query results from Solr instance
 # Query URL format: http://localhost:8983/solr/{}/select?q={QUERY}&q.op={OPERATOR}&indent=true&wt=json
 tuned_results = requests.get(TUNED_QUERY_URL.format(
@@ -40,7 +40,7 @@ def ap(results, relevant):
         len([
             doc
             for doc in results[:idx]
-            if str(doc['ResponseID'][0]) in relevant
+            if doc['ResponseID'] in relevant
         ]) / idx
         for idx in range(1, len(results))
     ]
@@ -50,22 +50,22 @@ def ap(results, relevant):
 @metric
 def p10(results, relevant, n=10):
     """Precision at N"""
-    return len([doc for doc in results[:n] if str(doc['ResponseID'][0]) in relevant])/n
+    return len([doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
 
 
 @metric
 def r10(results, relevant, n=10):
     """Recall at N"""
-    return len([doc for doc in results[:n] if str(doc['ResponseID'][0]) in relevant])/len(relevant)
+    return len([doc for doc in results[:n] if doc['ResponseID'] in relevant])/len(relevant)
 
 
 @metric
 def f10(results, relevant, n=10):
     """F1-score at N"""
     precision_at_10 = len(
-        [doc for doc in results[:n] if str(doc['ResponseID'][0]) in relevant])/n
-    recall_at_10 = len([doc for doc in results[:n] if str(
-        doc['ResponseID'][0]) in relevant])/len(relevant)
+        [doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
+    recall_at_10 = len([doc for doc in results[:n] if
+                        doc['ResponseID'] in relevant])/len(relevant)
     return 2 * (precision_at_10 * recall_at_10) / (precision_at_10 + recall_at_10)
 
 
@@ -99,7 +99,7 @@ def calculate_precision_recall_curve(results, relevant, schematype):
         len([
             doc
             for doc in results[:idx]
-            if str(doc['ResponseID'][0]) in relevant
+            if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant
         ]) / idx
         for idx, _ in enumerate(results, start=1)
     ]
@@ -107,7 +107,7 @@ def calculate_precision_recall_curve(results, relevant, schematype):
     recall_values = [
         len([
             doc for doc in results[:idx]
-            if str(doc['ResponseID'][0]) in relevant
+            if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant
         ]) / len(relevant)
         for idx, _ in enumerate(results, start=1)
     ]
