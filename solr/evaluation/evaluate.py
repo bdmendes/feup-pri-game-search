@@ -65,6 +65,8 @@ def f10(results, relevant, n=10):
         [doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
     recall_at_10 = len([doc for doc in results[:n] if
                         doc['ResponseID'] in relevant])/len(relevant)
+    if (precision_at_10 + recall_at_10) == 0:
+        return 0
     return 2 * (precision_at_10 * recall_at_10) / (precision_at_10 + recall_at_10)
 
 def calculate_metric(key, results, relevant):
@@ -80,15 +82,17 @@ evaluation_metrics = {
 }
 
 # Calculate all metrics and export results as LaTeX table
-df = pd.DataFrame([['Metric', 'Value']] +
-                  [
-    [evaluation_metrics[m], calculate_metric(m, tuned_results, relevant)]
-    for m in evaluation_metrics
-]
-)
+df_tuned = pd.DataFrame([['Metric', 'Query Simple', 'Query Tuned']] +
+                    [
+                        [evaluation_metrics[m], calculate_metric(m, simple_results, relevant), calculate_metric(m, tuned_results, relevant)]
+                        for m in evaluation_metrics
+                    ]
+                    )
+
+print(df_tuned)
 
 with open(CURRENT_PATH + f'results/{QNAME}_metrics_table.tex', 'w') as tf:
-    tf.write(df.style.to_latex())
+    tf.write(df_tuned.style.to_latex())
 
 
 def calculate_precision_recall_curve(results, relevant, schematype):
