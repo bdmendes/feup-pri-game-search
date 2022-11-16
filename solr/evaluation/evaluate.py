@@ -89,8 +89,6 @@ df_tuned = pd.DataFrame([['Metric', 'Query Simple', 'Query Tuned']] +
                     ]
                     )
 
-print(df_tuned)
-
 with open(CURRENT_PATH + f'results/{QNAME}_metrics_table.tex', 'w') as tf:
     tf.write(df_tuned.style.to_latex())
 
