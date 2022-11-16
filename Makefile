@@ -1,4 +1,4 @@
-PYTHON = python
+PYTHON = python3
 ORIGINAL_CSV_PATH = data/original.csv
 PROCESSED_CSV_PATH = data/processed.csv
 PROCESSED_JSON_PATH = data/processed.json
