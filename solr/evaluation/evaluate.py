@@ -134,7 +134,7 @@ def calculate_precision_recall_curve(results, relevant, schematype):
     plt.xlim([0,1.1])
     plt.ylim([0,1.1])
     plt.savefig(CURRENT_PATH +
-                f'results/{QNAME}_precision_recall_graph_{schematype}.pdf')
+                f'results/{QNAME}_precision_recall_graph_{schematype}.png')
 
 
 calculate_precision_recall_curve(simple_results, relevant, "simple")
