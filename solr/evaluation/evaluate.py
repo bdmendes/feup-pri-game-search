@@ -39,7 +39,7 @@ def ap(results, relevant, schematype):
         len([
             doc
             for doc in results[:idx]
-            if doc['ResponseID'] in relevant
+            if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant
         ]) / idx
         for idx in range(1, len(results))
     ]
@@ -62,7 +62,7 @@ def r10(results, relevant, schematype, n=10):
 def f10(results, relevant, schematype, n=10):
     """F1-score at N"""
     precision_at_10 = len(
-        [doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
+        [doc for doc in results[:n] if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/n
     recall_at_10 = len([doc for doc in results[:n] if
                         (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/len(relevant)
     if (precision_at_10 + recall_at_10) == 0:
