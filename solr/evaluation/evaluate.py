@@ -33,7 +33,7 @@ def metric(f): return metrics.setdefault(f.__name__, f)
 
 
 @metric
-def ap(results, relevant):
+def ap(results, relevant, schematype):
     """Average Precision"""
     precision_values = [
         len([
@@ -47,30 +47,30 @@ def ap(results, relevant):
 
 
 @metric
-def p10(results, relevant, n=10):
+def p10(results, relevant, schematype, n=10):
     """Precision at N"""
-    return len([doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
+    return len([doc for doc in results[:n] if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/n
 
 
 @metric
-def r10(results, relevant, n=10):
+def r10(results, relevant, schematype, n=10):
     """Recall at N"""
-    return len([doc for doc in results[:n] if doc['ResponseID'] in relevant])/len(relevant)
+    return len([doc for doc in results[:n] if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/len(relevant)
 
 
 @metric
-def f10(results, relevant, n=10):
+def f10(results, relevant, schematype, n=10):
     """F1-score at N"""
     precision_at_10 = len(
         [doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
     recall_at_10 = len([doc for doc in results[:n] if
-                        doc['ResponseID'] in relevant])/len(relevant)
+                        (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/len(relevant)
     if (precision_at_10 + recall_at_10) == 0:
         return 0
     return 2 * (precision_at_10 * recall_at_10) / (precision_at_10 + recall_at_10)
 
-def calculate_metric(key, results, relevant):
-    return metrics[key](results, relevant)
+def calculate_metric(key, results, relevant, schematype):
+    return metrics[key](results, relevant, schematype)
 
 
 # Define metrics to be calculated
@@ -84,7 +84,7 @@ evaluation_metrics = {
 # Calculate all metrics and export results as LaTeX table
 df_tuned = pd.DataFrame([['Metric', 'Query Simple', 'Query Tuned']] +
                     [
-                        [evaluation_metrics[m], calculate_metric(m, simple_results, relevant), calculate_metric(m, tuned_results, relevant)]
+                        [evaluation_metrics[m], calculate_metric(m, simple_results, relevant, "simple"), calculate_metric(m, tuned_results, relevant, "tuned")]
                         for m in evaluation_metrics
                     ]
                     )
