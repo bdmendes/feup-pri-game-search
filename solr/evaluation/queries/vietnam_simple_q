@@ -1,0 +1,1 @@
+http://127.0.0.1:8983/solr/games_simple/select?q=ResponseName:%22Vietnam%22~2%5E4,%20PromotionalDescription:%22Vietnam%22~2,%0AwikiData:%22Vietnam%22~2%5E3&q.op=OR&indent=true&fq=Metacritic:%5B50%20TO%20*%5D&wt=json

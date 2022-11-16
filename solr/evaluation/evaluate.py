@@ -15,17 +15,16 @@ if not os.path.exists(CURRENT_PATH + "results/"):
     os.mkdir(CURRENT_PATH + "results/")
 
 QRELS_FILE = CURRENT_PATH + f"qrels/{QNAME}_qrels"
-Q_FILE = CURRENT_PATH + f"queries/{QNAME}_q"
-TUNED_QUERY_URL = open(Q_FILE).readline()
+SIMPLE_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_simple_q"
+TUNED_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_tuned_q"
+SIMPLE_QUERY_URL = open(SIMPLE_Q_FILE).readline()
+TUNED_QUERY_URL = open(TUNED_Q_FILE).readline()
 
 # Read qrels to extract relevant documents
 relevant = list(map(lambda el: int(el.strip()), open(QRELS_FILE).readlines()))
 # Get query results from Solr instance
-# Query URL format: http://localhost:8983/solr/{}/select?q={QUERY}&q.op={OPERATOR}&indent=true&wt=json
-tuned_results = requests.get(TUNED_QUERY_URL.format(
-    "games_tuned")).json()['response']['docs']
-simple_results = requests.get(TUNED_QUERY_URL.format(
-    "games_simple")).json()['response']['docs']
+simple_results = requests.get(SIMPLE_QUERY_URL).json()['response']['docs']
+tuned_results = requests.get(TUNED_QUERY_URL).json()['response']['docs']
 
 # METRICS TABLE
 # Define custom decorator to automatically calculate metric based on key
@@ -67,7 +66,6 @@ def f10(results, relevant, n=10):
     recall_at_10 = len([doc for doc in results[:n] if
                         doc['ResponseID'] in relevant])/len(relevant)
     return 2 * (precision_at_10 * recall_at_10) / (precision_at_10 + recall_at_10)
-
 
 def calculate_metric(key, results, relevant):
     return metrics[key](results, relevant)
