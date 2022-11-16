@@ -129,6 +129,8 @@ def calculate_precision_recall_curve(results, relevant, schematype):
     disp = PrecisionRecallDisplay(
         [precision_recall_match.get(r) for r in recall_values], recall_values)
     disp.plot()
+    plt.xlim([0,1.1])
+    plt.ylim([0,1.1])
     plt.savefig(CURRENT_PATH +
                 f'results/{QNAME}_precision_recall_graph_{schematype}.pdf')
 

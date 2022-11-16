@@ -835,6 +835,7 @@ result, resultant, final result, outcome, termination
 return, homecoming
 reverse, contrary, opposite
 rhythm, beat, musical rhythm
+riddle, puzzle
 rigid, stiff
 ring, band
 rise, rising, ascent, ascension
