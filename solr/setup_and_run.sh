@@ -48,6 +48,14 @@ curl -X POST -H 'Content-type:application/json' \
     --data-binary @$DIR/data/processed.json \
     http://localhost:8983/solr/games_tuned/update?commit=true
 
+curl -X POST -H 'Content-type:application/json' \
+    --data-binary "{ \"add-requesthandler\" : { 
+        \"name\": \"/mlt\", 
+        \"class\": \"solr.MoreLikeThisHandler\", 
+        \"defaults\": {\"mlt.fl\": \"body\"} 
+    }
+}" http://localhost:8983/solr/games_tuned/config
+
 echo ""
 echo "Solr is running on http://localhost:8983/solr/#/games_tuned/core-overview"
 echo "You can kill this container anytime with 'docker stop solr_steam'"
