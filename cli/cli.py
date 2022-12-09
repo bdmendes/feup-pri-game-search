@@ -1,5 +1,7 @@
 import os
 
+from query import GameQuery
+
 
 def clear_screen():
     """Clear the screen."""
@@ -27,27 +29,34 @@ def request_query() -> str:
 
 def main():
     """Main function."""
-    clear_screen()
-    print("Welcome to the Steam Games Search Engine CLI!")
-    print("Remember to start the Solr instance before using this CLI.")
-    print("==============================================")
+    while True:
+        clear_screen()
+        print("Welcome to the Steam Games Search Engine CLI!")
+        print("Remember to start the Solr instance before using this CLI.")
+        print("==============================================")
 
-    options = ["Perfom a query", "See demo queries", "Exit"]
-    option = request_option(options)
-    match option:
-        case "Perfom a query":
-            clear_screen()
-            query = request_query()
+        options = ["Perfom a query", "See demo queries", "Exit"]
+        option = request_option(options)
+        match option:
+            case "Perfom a query":
+                clear_screen()
+                query_str = request_query()
 
-            # get profile and get results
-            print(f"Query: {query}")
-        case "See demo queries":
-            clear_screen()
-            print("Demo queries")
-        case "Exit":
-            print("Bye!")
-        case _:
-            print("Invalid option")
+                # get profile and get results
+                query = GameQuery(query_str)
+                query.print_results_in_pager()
+                continue
+            case "See demo queries":
+                clear_screen()
+                print("Demo queries")
+            case "Exit":
+                print("Bye!")
+                break
+            case _:
+                print("Invalid option")
+
+        print("\nPress enter to go back...")
+        input()
 
 
 if __name__ == "__main__":
