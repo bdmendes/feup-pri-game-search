@@ -34,7 +34,7 @@ def main():
 
     tqdm.pandas()  # Create new `pandas` methods which use `tqdm` progress
 
-    data['wikiData'] = data['ResponseName'].progress_apply(get_wiki_data)
+    data['WikiData'] = data['ResponseName'].progress_apply(get_wiki_data)
 
     data.to_csv(arg, index=False)
 

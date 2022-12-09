@@ -1,0 +1,1 @@
+http://localhost:8983/solr/games_simple/select?fq=AchievementCount%3A%5B10%20TO%20*%5D&indent=true&q.op=OR&q=ResponseName%3A%22zombies%22~2%5E4%0APromotionalDescription%3A%22zombies%22~2%0AWikiData%3A%22zombies%22~2%5E3
