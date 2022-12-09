@@ -1,5 +1,4 @@
 import requests
-import os
 import sys
 
 QUERY_TEXT = sys.argv[1]
@@ -10,6 +9,7 @@ print(QUERY)
 results = requests.get(QUERY).json()['response']['docs']
 
 titles = [i["ResponseName"] for i in results]
+print(titles)
 if len(titles) == 0:
     print("No data")
     exit(0)
