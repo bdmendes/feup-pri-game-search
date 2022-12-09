@@ -45,19 +45,30 @@ class GameQuery(Query):
         super().__init__(query, qop="OR",
                          qf="Genres^4 ResponseName^3 WikiData^2 PromotionalDescription", def_type="edismax", rows=rows)
         self.bf = self.generate_boost_function()
+        self.qop = self.generate_qop()
 
     def generate_boost_function(self):
         # dark magic here; heuristics to determine the boost function according to the query
-        return ""
+        # return m2 default for now
+        return "sum(sum(mul(0.5,Metacritic),mul(10,log(SteamSpyPlayersEstimate))),mul(15,log(RecommendationCount)))"
+
+    def generate_qop(self):
+        # dark magic; heuristics to determine the q.op according to the query
+        # return OR for now
+        return "OR"
 
     def print_results_in_pager(self):
         res = ""
         results, num_found = self.results()
         res += f"Query: {self.query}\n"
-        res += f"URL: {self.ui_url()}\n"
+        res += f"bf: {self.bf}\n"
+        res += f"q.op: {self.qop}\n"
         res += f"Found {num_found} results\n\n"
+        res += "==============================================\n\n"
         for result in results:
             res += GameQuery.stringify_doc(result) + "\n"
+        res += "==============================================\n\n"
+        res += f"URL: {self.ui_url()}\n"
         pager(res)
 
     @staticmethod
@@ -71,8 +82,8 @@ class GameQuery(Query):
             if type(doc[key]) == list:
                 res += f"{key}: {', '.join(doc[key])}\n"
                 continue
-            if isinstance(doc[key], str) and len(doc[key]) > 120:
-                res += f"{key}: {doc[key][:120]}...\n"
+            if isinstance(doc[key], str) and len(doc[key]) > 200:
+                res += f"{key}: {doc[key][:200]}...\n"
                 continue
             res += f"{key}: {doc[key]}\n"
         return res
