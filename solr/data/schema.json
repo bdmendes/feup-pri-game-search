@@ -1,0 +1,249 @@
+{
+    "add-field-type": [
+        {
+            "name": "mdate",
+            "class": "solr.DateRangeField",
+            "multiValued": false
+        },
+        {
+            "name": "mbool",
+            "class": "solr.BoolField",
+            "multiValued": false,
+            "docValues": true
+        },
+        {
+            "name": "mint",
+            "class": "solr.IntPointField",
+            "multiValued": false,
+            "docValues": true
+        },
+        {
+            "name": "mfloat",
+            "class": "solr.FloatPointField",
+            "multiValued": false,
+            "docValues": true
+        },
+        {
+            "name": "mstring",
+            "class": "solr.StrField",
+            "multiValued": false
+        },
+        {
+            "name": "short_text",
+            "class": "solr.TextField",
+            "indexAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
+                "tokenizer": {
+                    "class": "solr.ClassicTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.ClassicFilterFactory"
+                    },
+                    {
+                        "class": "solr.KStemFilterFactory"
+                    },
+                    {
+                        "class": "solr.PhoneticFilterFactory",
+                        "encoder": "DoubleMetaphone"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
+                ]
+            },
+            "queryAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
+                "tokenizer": {
+                    "class": "solr.ClassicTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.ClassicFilterFactory"
+                    },
+                    {
+                        "class": "solr.KStemFilterFactory"
+                    },
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "general_text",
+            "class": "solr.TextField",
+            "indexAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
+                        "class": "solr.CommonGramsFilterFactory"
+                    },
+                    {
+                        "class": "solr.SynonymFilterFactory",
+                        "synonyms": "synonyms_en.txt",
+                        "ignoreCase": true,
+                        "expand": true
+                    },
+                    {
+                        "class": "solr.StopFilterFactory",
+                        "ignoreCase": true,
+                        "words": "lang/stopwords_en.txt"
+                    },
+                    {
+                        "class": "solr.RemoveDuplicatesTokenFilterFactory"
+                    },
+                    {
+                        "class": "solr.PorterStemFilterFactory"
+                    }
+                ]
+            },
+            "queryAnalyzer": {
+                "charFilter": {
+                    "class": "solr.MappingCharFilterFactory",
+                    "mapping": "mapping-FoldToASCII.txt"
+                },
+                "tokenizer": {
+                    "class": "solr.StandardTokenizerFactory"
+                },
+                "filters": [
+                    {
+                        "class": "solr.LowerCaseFilterFactory"
+                    },
+                    {
+                        "class": "solr.StopFilterFactory",
+                        "ignoreCase": true,
+                        "words": "lang/stopwords_en.txt"
+                    },
+                    {
+                        "class": "solr.CommonGramsFilterFactory"
+                    },
+                    {
+                        "class": "solr.PorterStemFilterFactory"
+                    }
+                ]
+            }
+        }
+    ],
+    "add-field": [
+        {
+            "name": "ResponseName",
+            "type": "short_text"
+        },
+        {
+            "name": "PromotionalDescription",
+            "type": "general_text"
+        },
+        {
+            "name": "WikiData",
+            "type": "general_text"
+        },
+        {
+            "name": "ResponseID",
+            "type": "mint"
+        },
+        {
+            "name": "ReleaseDate",
+            "type": "mdate"
+        },
+        {
+            "name": "RequiredAge",
+            "type": "mint"
+        },
+        {
+            "name": "DemoCount",
+            "type": "mint"
+        },
+        {
+            "name": "DeveloperCount",
+            "type": "mint"
+        },
+        {
+            "name": "DLCCount",
+            "type": "mint"
+        },
+        {
+            "name": "Metacritic",
+            "type": "mint"
+        },
+        {
+            "name": "RecommendationCount",
+            "type": "mint"
+        },
+        {
+            "name": "PublisherCount",
+            "type": "mint"
+        },
+        {
+            "name": "SteamSpyOwners",
+            "type": "mint"
+        },
+        {
+            "name": "SteamSpyPlayersEstimate",
+            "type": "mint"
+        },
+        {
+            "name": "AchievementCount",
+            "type": "mint"
+        },
+        {
+            "name": "ControllerSupport",
+            "type": "mbool"
+        },
+        {
+            "name": "IsFree",
+            "type": "mbool"
+        },
+        {
+            "name": "FreeVerAvail",
+            "type": "mbool"
+        },
+        {
+            "name": "PurchaseAvail",
+            "type": "mbool"
+        },
+        {
+            "name": "SubscriptionAvail",
+            "type": "mbool"
+        },
+        {
+            "name": "PriceInitial",
+            "type": "mfloat"
+        },
+        {
+            "name": "PriceFinal",
+            "type": "mfloat"
+        },
+        {
+            "name": "HeaderImage",
+            "type": "mstring"
+        },
+        {
+            "name": "PCMinReqsText",
+            "type": "short_text"
+        },
+        {
+            "name": "LinuxMinReqsText",
+            "type": "short_text"
+        },
+        {
+            "name": "MacMinReqsText",
+            "type": "short_text"
+        }
+    ]
+}

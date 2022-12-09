@@ -2,46 +2,38 @@ import sys
 import pandas as pd
 import os
 
+languages_column = 'SupportedLanguages'
+audio_languages_column = 'SupportedAudioLanguages'
+
+
+def split_languages(languages, is_audio=False):
+    languages = languages.split(' ')
+    i = 0
+    while i < len(languages):
+        if (is_audio and '*' not in languages[i]) or len(languages[i]) == 0 or languages[i][0].islower():
+            del languages[i]
+            i -= 1
+        else:
+            languages[i] = languages[i].split('*')[0].strip()
+            if languages[i] == '':
+                del languages[i]
+                i -= 1
+            elif languages[i] == 'Traditional' or languages[i] == 'Simplified':
+                languages[i] = languages[i] + ' Chinese'
+                del languages[i + 1]
+                i -= 1
+        i += 1
+    return languages
+
 
 def main():
     arg = os.path.dirname(__file__) + '/' + sys.argv[1]
 
     data = pd.read_csv(arg)
 
-    languages_column = 'SupportedLanguages'
-    audio_languages_column = 'SupportedAudioLanguages'
-    audio_languages_column_data = []
-    languages_column_data = []
-
-    for i in range(data.shape[0]):
-        new_language_data = list(data.iloc[i][languages_column].split(' '))
-        new_audio_language_data = []
-        extra = ""
-
-        for i, language in enumerate(new_language_data):
-            if language == '':
-                continue
-
-            if language == 'Traditional' or language == 'Simplified':
-                extra = language + ' '
-                continue
-
-            if '*' == language[-1] or language.count('**') == 1:
-                new_language_data[i] = extra + language[:-1]
-                new_audio_language_data.append(extra + language[:-1])
-                extra = ''
-
-        if new_audio_language_data != []:
-            new_language_data = new_language_data[:-4]
-            new_language_data[-1] = new_language_data[-1].split('*')[0]
-            new_audio_language_data[-1] = new_audio_language_data[-1].split('*')[
-                0]
-
-        audio_languages_column_data.append(new_audio_language_data)
-        languages_column_data.append(new_language_data)
-
-    data[audio_languages_column] = audio_languages_column_data
-    data[languages_column] = languages_column_data
+    data[audio_languages_column] = data[languages_column].apply(
+        lambda x: split_languages(x, True))
+    data[languages_column] = data[languages_column].apply(split_languages)
 
     data.to_csv(arg, index=False)
 
