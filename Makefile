@@ -52,6 +52,10 @@ convert_to_json:
 solr:
 	./solr/setup_and_run.sh
 
+# CLI
+cli:
+	python ./cli/cli.py
+
 # Cleaning
 clean:
 	rm -f $(ORIGINAL_CSV_PATH)
