@@ -1,0 +1,4 @@
+asyncio
+aiohttp
+pandas
+spacy
