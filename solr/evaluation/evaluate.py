@@ -15,17 +15,17 @@ if not os.path.exists(CURRENT_PATH + "results/"):
     os.mkdir(CURRENT_PATH + "results/")
 
 QRELS_FILE = CURRENT_PATH + f"qrels/{QNAME}_qrels"
-SIMPLE_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_simple_q"
+#SIMPLE_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_simple_q"
 TUNED_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_tuned_q"
 TUNED_FINAL_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_tuned_final_q"
-SIMPLE_QUERY_URL = open(SIMPLE_Q_FILE).readline()
+#SIMPLE_QUERY_URL = open(SIMPLE_Q_FILE).readline()
 TUNED_QUERY_URL = open(TUNED_Q_FILE).readline()
 TUNED_FINAL_QUERY_URL = open(TUNED_FINAL_Q_FILE).readline()
 
 # Read qrels to extract relevant documents
 relevant = list(map(lambda el: int(el.strip()), open(QRELS_FILE).readlines()))
 # Get query results from Solr instance
-simple_results = requests.get(SIMPLE_QUERY_URL).json()['response']['docs']
+# simple_results = requests.get(SIMPLE_QUERY_URL).json()['response']['docs']
 tuned_results = requests.get(TUNED_QUERY_URL).json()['response']['docs']
 tuned_final_results = requests.get(TUNED_FINAL_QUERY_URL).json()['response']['docs']
 
@@ -44,7 +44,7 @@ def ap(results, relevant, schematype):
             for doc in results[:idx]
             if doc['ResponseID'] in relevant
         ]) / idx
-        for idx in range(1, len(results))
+        for idx in range(1, len(results) + 1)
     ]
     return sum(precision_values)/len(precision_values)
 
@@ -85,7 +85,7 @@ evaluation_metrics = {
 }
 
 # Calculate all metrics and export results as LaTeX table
-df_tuned = pd.DataFrame([['Metric', 'Query Simple', 'Query Tuned']] +
+df_tuned = pd.DataFrame([['Metric', 'Query Tuned Simple', 'Query Tuned']] +
                     [
                         [evaluation_metrics[m], calculate_metric(m, tuned_results, relevant, "tuned_simple"), calculate_metric(m, tuned_final_results, relevant, "tuned")]
                         for m in evaluation_metrics
@@ -137,7 +137,7 @@ def calculate_precision_recall_curve(results, relevant, schematype):
     plt.xlim([0,1.1])
     plt.ylim([0,1.1])
     plt.savefig(CURRENT_PATH +
-                f'results/{QNAME}_precision_recall_graph_{schematype}.png')
+                f'results/{QNAME}_precision_recall_graph_{schematype}_m3.pdf')
 
 
 calculate_precision_recall_curve(tuned_results, relevant, "tuned_simple")
