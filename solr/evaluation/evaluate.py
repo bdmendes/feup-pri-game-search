@@ -17,14 +17,17 @@ if not os.path.exists(CURRENT_PATH + "results/"):
 QRELS_FILE = CURRENT_PATH + f"qrels/{QNAME}_qrels"
 SIMPLE_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_simple_q"
 TUNED_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_tuned_q"
+TUNED_FINAL_Q_FILE = CURRENT_PATH + f"queries/{QNAME}_tuned_final_q"
 SIMPLE_QUERY_URL = open(SIMPLE_Q_FILE).readline()
 TUNED_QUERY_URL = open(TUNED_Q_FILE).readline()
+TUNED_FINAL_QUERY_URL = open(TUNED_FINAL_Q_FILE).readline()
 
 # Read qrels to extract relevant documents
 relevant = list(map(lambda el: int(el.strip()), open(QRELS_FILE).readlines()))
 # Get query results from Solr instance
 simple_results = requests.get(SIMPLE_QUERY_URL).json()['response']['docs']
 tuned_results = requests.get(TUNED_QUERY_URL).json()['response']['docs']
+tuned_final_results = requests.get(TUNED_FINAL_QUERY_URL).json()['response']['docs']
 
 # METRICS TABLE
 # Define custom decorator to automatically calculate metric based on key
@@ -39,9 +42,9 @@ def ap(results, relevant, schematype):
         len([
             doc
             for doc in results[:idx]
-            if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant
+            if doc['ResponseID'] in relevant
         ]) / idx
-        for idx in range(1, len(results) + 1)
+        for idx in range(1, len(results))
     ]
     return sum(precision_values)/len(precision_values)
 
@@ -49,22 +52,22 @@ def ap(results, relevant, schematype):
 @metric
 def p10(results, relevant, schematype, n=10):
     """Precision at N"""
-    return len([doc for doc in results[:n] if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/n
+    return len([doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
 
 
 @metric
 def r10(results, relevant, schematype, n=10):
     """Recall at N"""
-    return len([doc for doc in results[:n] if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/len(relevant)
+    return len([doc for doc in results[:n] if doc['ResponseID'] in relevant])/len(relevant)
 
 
 @metric
 def f10(results, relevant, schematype, n=10):
     """F1-score at N"""
     precision_at_10 = len(
-        [doc for doc in results[:n] if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/n
+        [doc for doc in results[:n] if doc['ResponseID'] in relevant])/n
     recall_at_10 = len([doc for doc in results[:n] if
-                        (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant])/len(relevant)
+                        doc['ResponseID'] in relevant])/len(relevant)
     if (precision_at_10 + recall_at_10) == 0:
         return 0
     return 2 * (precision_at_10 * recall_at_10) / (precision_at_10 + recall_at_10)
@@ -84,7 +87,7 @@ evaluation_metrics = {
 # Calculate all metrics and export results as LaTeX table
 df_tuned = pd.DataFrame([['Metric', 'Query Simple', 'Query Tuned']] +
                     [
-                        [evaluation_metrics[m], calculate_metric(m, simple_results, relevant, "simple"), calculate_metric(m, tuned_results, relevant, "tuned")]
+                        [evaluation_metrics[m], calculate_metric(m, tuned_results, relevant, "tuned_simple"), calculate_metric(m, tuned_final_results, relevant, "tuned")]
                         for m in evaluation_metrics
                     ]
                     )
@@ -99,7 +102,7 @@ def calculate_precision_recall_curve(results, relevant, schematype):
         len([
             doc
             for doc in results[:idx]
-            if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant
+            if doc['ResponseID'] in relevant
         ]) / idx
         for idx, _ in enumerate(results, start=1)
     ]
@@ -107,7 +110,7 @@ def calculate_precision_recall_curve(results, relevant, schematype):
     recall_values = [
         len([
             doc for doc in results[:idx]
-            if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant
+            if doc['ResponseID'] in relevant
         ]) / len(relevant)
         for idx, _ in enumerate(results, start=1)
     ]
@@ -137,5 +140,5 @@ def calculate_precision_recall_curve(results, relevant, schematype):
                 f'results/{QNAME}_precision_recall_graph_{schematype}.png')
 
 
-calculate_precision_recall_curve(simple_results, relevant, "simple")
-calculate_precision_recall_curve(tuned_results, relevant, "tuned")
+calculate_precision_recall_curve(tuned_results, relevant, "tuned_simple")
+calculate_precision_recall_curve(tuned_final_results, relevant, "tuned")
