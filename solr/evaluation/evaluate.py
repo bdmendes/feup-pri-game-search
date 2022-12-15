@@ -41,7 +41,7 @@ def ap(results, relevant, schematype):
             for doc in results[:idx]
             if (doc['ResponseID'] if schematype == "tuned" else doc['ResponseID'][0]) in relevant
         ]) / idx
-        for idx in range(1, len(results))
+        for idx in range(1, len(results) + 1)
     ]
     return sum(precision_values)/len(precision_values)
 
