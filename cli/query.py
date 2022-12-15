@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 from pydoc import pager
 
 SOLR_QUERY_URL = "http://127.0.0.1:8983/solr/games_tuned/query"
+SOLR_MLT_URL = "http://127.0.0.1:8983/solr/games_tuned/mlt"
 
 script_dir = os.path.dirname(__file__)
 rel_path = "gamer_dict.txt"
@@ -25,7 +26,7 @@ class Query:
     def __str__(self):
         return f"Query: {self.query}"
 
-    def url(self):
+    def url(self, baseUrl):
         query_fields = {
             "q": self.query,
             "q.op": self.qop,
@@ -35,15 +36,37 @@ class Query:
             "qf": self.qf,
             "rows": self.rows
         }
-        return f"{SOLR_QUERY_URL}?{urlencode(query_fields)}"
+        return f"{baseUrl}?{urlencode(query_fields)}"
+
+    def query_url(self):
+        return f"{self.url(SOLR_QUERY_URL)}&wt=python"
+
+    def mlt_url(self, query):
+        query_fields = {
+            "q": query,
+            "q.op": self.qop,
+            "defType": self.def_type,
+            "bf": self.bf,
+            "fq": self.fq,
+            "qf": self.qf,
+            "mlt.fl": "WikiData,PromotionalDescription" + (",EntityWikiData" if "EntityWikiData" in self.qf else ""),
+            "mlt.qf": self.qf
+        }
+        return f"{SOLR_MLT_URL}?{urlencode(query_fields)}&wt=python"
 
     def ui_url(self):
-        return self.url().replace("/solr/", "/solr/#/")
+        return self.url(SOLR_QUERY_URL).replace("/solr/", "/solr/#/")
 
     def results(self):
-        connection = urlopen(f"{self.url()}&wt=python")
-        response = eval(connection.read())
-        return response['response']['docs'], response['response']['numFound']
+        query_connection = urlopen(self.query_url())
+        query_response = eval(query_connection.read())
+        mlt_results = {}
+        for item in query_response['response']['docs']:
+            mlt_connection = urlopen(self.mlt_url(item["ResponseName"]))
+            mlt_response = eval(mlt_connection.read())
+            mlt_results[item["ResponseName"]] = [i['ResponseName']
+                                                 for i in mlt_response['response']['docs'][:2]]
+        return query_response['response']['docs'], query_response['response']['numFound'], mlt_results
 
 
 class GameQuery(Query):
@@ -103,14 +126,15 @@ class GameQuery(Query):
 
     def print_results_in_pager(self):
         res = ""
-        results, num_found = self.results()
+        results, num_found, mlt_results = self.results()
         res += f"Query: {self.query}\n"
         res += f"bf: {self.bf}\n"
         res += f"q.op: {self.qop}\n"
         res += f"Found {num_found} results\n\n"
         res += "==============================================\n\n"
         for result in results:
-            res += GameQuery.stringify_doc(result) + "\n"
+            res += GameQuery.stringify_doc(result)
+            res += f"Related results: {', '.join(mlt_results[result['ResponseName']])}" + "\n\n"
         res += "==============================================\n\n"
         res += f"URL: {self.ui_url()}\n"
         pager(res)
