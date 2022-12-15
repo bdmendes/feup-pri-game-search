@@ -154,6 +154,10 @@
             "type": "general_text"
         },
         {
+            "name": "EntityWikiData",
+            "type": "general_text"
+        },
+        {
             "name": "ResponseID",
             "type": "mint"
         },
