@@ -35,20 +35,39 @@ def main():
         print("Remember to start the Solr instance before using this CLI.")
         print("==============================================")
 
-        options = ["Perfom a query", "See demo queries", "Exit"]
+        options = [
+            "Perform a query (original setup)",
+            "Perform a query (tuned setup)",
+            "Perform a query (tuned with entity data)",
+            "Perform a query (tuned with entity data and gamer profile detection)",
+            "Exit"
+        ]
         option = request_option(options)
         match option:
-            case "Perfom a query":
+            case "Perform a query (original setup)":
                 clear_screen()
                 query_str = request_query()
-
-                # get profile and get results
-                query = GameQuery(query_str)
+                query = GameQuery(query_str, use_bf=False)
                 query.print_results_in_pager()
                 continue
-            case "See demo queries":
+            case "Perform a query (tuned setup)":
                 clear_screen()
-                print("Demo queries")
+                query_str = request_query()
+                query = GameQuery(query_str)
+                query.print_results_in_pager()
+            case "Perform a query (tuned with entity data)":
+                clear_screen()
+                query_str = request_query()
+                query = GameQuery(query_str, use_entities_data=True)
+                query.print_results_in_pager()
+                continue
+            case "Perform a query (tuned with entity data and gamer profile detection)":
+                clear_screen()
+                query_str = request_query()
+                query = GameQuery(
+                    query_str, use_gamer_profile=True, use_entities_data=True)
+                query.print_results_in_pager()
+                continue
             case "Exit":
                 print("Bye!")
                 break
