@@ -64,7 +64,8 @@ class Query:
         for item in query_response['response']['docs']:
             mlt_connection = urlopen(self.mlt_url(item["ResponseName"]))
             mlt_response = eval(mlt_connection.read())
-            mlt_results[item["ResponseName"]] = [i['ResponseName'] for i in mlt_response['response']['docs']]
+            mlt_results[item["ResponseName"]] = [i['ResponseName']
+                                                 for i in mlt_response['response']['docs']]
         return query_response['response']['docs'], query_response['response']['numFound'], mlt_results
 
 
